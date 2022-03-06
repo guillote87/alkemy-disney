@@ -1,9 +1,13 @@
 'use strict';
 
-const { User } = require('../database/models/User')
+const { User } = require('../models')
+const { Movie } = require('../models')
+const {Character} = require('../models');
+const {Genre} = require('../models');
+
 const bcrypt = require('bcrypt')
-const authConfig = require('../database/config/auth');
-const Personaje = require('../database/models/Personaje');
+const authConfig = require('../config/auth');
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     return Promise.all([
@@ -126,15 +130,7 @@ module.exports = {
         {
           name: "Misterio",
           image: "misterio.jpg",
-        }),
-
-      // Carga relaciones MovieCharacter
-      MovieCharacter.create(
-        {
-          CharacterId: 1,
-          MovieId: 4
-        }
-      )
+        }),   
     ]
     )
   },

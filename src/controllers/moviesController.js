@@ -10,46 +10,48 @@ const moviesController = {
 
         const { name, genre, order } = req.query
         const movieFilters = {};
-        // si existe name lo pasa, sino pasa string vacio
+
+        // si existe name lo pasa
         if (name) {
-            movieFilters.title = name
-        } else {
-            movieFilters.title = ""
-        }
+            movieFilters.title = {
+                [Op.like]: `${name}%`
+            }
+        }   
         // pasa por defecto orden ASC
 
-        let orderFilter = ['creada', 'ASC']
+        let orderFilter = ['created', 'ASC']
 
-        // si existe order lo asigna a orderFilter
+        // si existe order lo asigna a orderFilter en mayuscula
         if (order) {
-            console.log(orderFilter)
-            const casedOrder = order.toUpperCase();
-            if (casedOrder === 'ASC' || casedOrder === 'DESC') { orderFilter = ['creada', order] }
-            else return res.status(400).send('Use a valid order (ASC/DESC)');
+
+            const UpOrder = order.toUpperCase();
+            if (UpOrder === 'ASC' || UpOrder === 'DESC') {
+                orderFilter = ['created', order]
+            } else {
+                return res.status(400).send('Use a valid order (ASC/DESC)');
+            }
+            // declaramos genero vacio 
         }
-        // declaramos genero vacio 
+            const genreFilters = {};
+            if (genre) { genreFilters.id = genre }
 
-        const genreFilters = {};
-        if (genero) { genreFilters.id = genero }
+            Movie.findAll({
+                attributes: ["title", "image", "created"],
+                where: movieFilters,
+                order: [orderFilter],
+                include: [
+                    {
+                        model: Genre,
+                        where: genreFilters,
+                        attributes: [],
+                    }
+                ]
+            }).then(movies => {
+                return res.status(200).send(movies)
+            }).catch(error => res.send(error))
 
-        Movie.findAll({
-            attributes: ["id", "title", "image", "Created"],
-            where: {
-                title: { [Op.like]: "%" + movieFilters.title + "%" }
-            },
-            order: [orderFilter],
-            include: [
-                {
-                    model: Genre,
-                    where: genreFilters,
-                }
-            ]
-        }).then(movies => {
-            return res.status(200).send(movies)
-        }).catch(error => res.send(error))
 
+        }
 
     }
-
-}
 module.exports = moviesController;

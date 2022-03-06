@@ -1,40 +1,50 @@
-const path = require('path');
 const { Character } = require('../database/models');
 const { Movie } = require('../database/models');
-const db = require('../database/models')
-const {
-    Op
-} = require("sequelize");
-const moment = require('moment');
+const { Op } = require('sequelize')
 
 const CharacterController = {
     //Mostrar todos los personajes
 
     listCharacters: (req, res) => {
+        const { name, age, weight, movies } = req.query
+
+        const filters = {}
+
+        if (name) filters.name = { [Op.like]: `%${name}%` }
+        if (age) { filters.age = age }
+        if (weight) { filters.weight = weight }
+
+        const movieFilter = {};
+
+        if (movies) movieFilter.title = { [Op.like]: `%${movies}%` }
+
         Character.findAll({
             attributes: ["name", "image"],
+            where: filters,
+            include: [{
+                model: Movie,
+                where: movieFilter,
+                attributes: [],
+            }]
         })
-            .then(character => {
-                let resp = {
-                    data: character
-                }
-                res.status(200).json(resp);
-            }).catch(error => res.send(error))
+            .then(resp => {
+                res.json(resp)
+            })
     },
 
     detail: (req, res) => {
         Character.findByPk(req.params.id, {
-            attributes: ["name", "image", "age"], include: [
-                { model: Movie }
+            attributes: ["name", "image", "age"],
+            include: [
+                {
+                    model: Movie,
+                    attributes: ["title", "image", "created", "rating"],
+                    through: {attributes: []}
+                }
             ]
         })
-            .then(character => {
-
-                let res = {
-                    data: character,
-                    image: "/image/character/" + character.image
-                }
-                res.json(res);
+            .then(resp => {
+                res.status(200).json(resp);
             }).catch(error => res.send(error))
     },
 
