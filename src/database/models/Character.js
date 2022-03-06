@@ -1,5 +1,5 @@
 module.exports = (sequelize, dataTypes) => {
-    let alias = "Personaje";
+    let alias = "Character";
     let cols = {
         id: {
             primaryKey: true,
@@ -8,19 +8,19 @@ module.exports = (sequelize, dataTypes) => {
             type: dataTypes.INTEGER(11),
         },
        
-        nombre: {
+        name: {
             type: dataTypes.STRING(50),
             allowNull: false,
         },
-        edad: {
+        age: {
             type: dataTypes.INTEGER(10),
             allowNull: false,
         },
-        peso: {
+        weight: {
             type: dataTypes.INTEGER(10),
             allowNull: false,
         },
-        historia: {
+        history: {
             type: dataTypes.STRING(100),
             allowNull: false,
         },
@@ -34,7 +34,7 @@ module.exports = (sequelize, dataTypes) => {
         deleted_at: dataTypes.DATE
     };
     let config = {
-        tableName: "personajes",
+        tableName: "characters",
         timestamps: true,
         createdAt: "created_at",
         updatedAt: "updated_at",
@@ -42,11 +42,11 @@ module.exports = (sequelize, dataTypes) => {
         paranoid: true
     }
 
-    const Personaje = sequelize.define(alias, cols, config);
-    Personaje.associate = (models) => {
-        Personaje.belongsToMany(models.Pelicula, {
-            through: "PeliculaPersonaje" 
+    const Character = sequelize.define(alias, cols, config);
+    Character.associate = (models) => {
+        Character.belongsToMany(models.Movie, {
+            through: "MovieCharacter" 
         })
     }
-    return Personaje
+    return Character
 }

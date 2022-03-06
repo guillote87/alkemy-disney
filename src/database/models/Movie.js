@@ -1,5 +1,5 @@
 module.exports = (sequelize, dataTypes) => {
-    let alias = "Pelicula";
+    let alias = "Movie";
     let cols = {
         id: {
             primaryKey: true,
@@ -7,15 +7,15 @@ module.exports = (sequelize, dataTypes) => {
             allowNull: false,
             autoIncrement: true,
         },
-        titulo: {
+        title: {
             type: dataTypes.STRING(50),
             allowNull: false,
         },
-        imagen: {
+        image: {
             type: dataTypes.STRING(50),
             allowNull: false,
         },
-        creada: {
+        created: {
             type: dataTypes.INTEGER(20),
             allowNull: false,
         },
@@ -27,19 +27,19 @@ module.exports = (sequelize, dataTypes) => {
 
     };
     let config = {
-        tableName: "peliculas",
+        tableName: "movies",
         timestamps: false,
     }
-    const Pelicula = sequelize.define(alias, cols, config);
-    Pelicula.associate = (models) => {
-        Pelicula.belongsToMany(models.Genero, {
-            through: "PeliculaGenero"
+    const Movie = sequelize.define(alias, cols, config);
+    Movie.associate = (models) => {
+        Movie.belongsToMany(models.Genre, {
+            through: "MovieGenre"
         })
-        Pelicula.belongsToMany(models.Personaje, {
-            through: "PeliculaPersonaje"
+        Movie.belongsToMany(models.Character, {
+            through: "MovieCharacter"
         })
     
     }
-return Pelicula;
+return Movie;
 }
 

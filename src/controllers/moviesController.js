@@ -1,14 +1,14 @@
 
-const { Pelicula } = require('../../../database/models')
-const { Genero } = require('../../../database/models')
+const { Movie } = require('../database/models')
+const { Genre } = require('../database/models')
 const { Op } = require('sequelize')
-const {Personaje} = require('../../../database/models')
-
 
 const moviesController = {
-    listMovies:  (req, res) => {
 
-        const { name, genero, order } = req.query
+
+    listMovies: (req, res) => {
+
+        const { name, genre, order } = req.query
         const movieFilters = {};
         // si existe name lo pasa, sino pasa string vacio
         if (name) {
@@ -32,23 +32,23 @@ const moviesController = {
         const genreFilters = {};
         if (genero) { genreFilters.id = genero }
 
-          Pelicula.findAll({
-                attributes: ["id", "titulo", "imagen", "creada"],
-                where:{
-                    titulo : {[Op.like] : "%" + movieFilters.title +"%"}
-                },
-                order: [orderFilter],
-                include: [
-                    { 
-                        model: Genero,
-                        where: genreFilters,
-                     }
-                ]
-            }).then(movies => {
-                return res.status(200).send(movies)
-            })
+        Movie.findAll({
+            attributes: ["id", "title", "image", "Created"],
+            where: {
+                title: { [Op.like]: "%" + movieFilters.title + "%" }
+            },
+            order: [orderFilter],
+            include: [
+                {
+                    model: Genre,
+                    where: genreFilters,
+                }
+            ]
+        }).then(movies => {
+            return res.status(200).send(movies)
+        }).catch(error => res.send(error))
 
-       
+
     }
 
 }

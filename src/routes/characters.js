@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const multer = require("multer")
 const path = require('path');
-const personajesController = require('../../src/controllers/api/personajesApiController');
-const auth = require('../../src/middlewares/auth');
+
+const characterController = require('../controllers/characterController');
+const auth = require('../middlewares/auth');
 
 let multerDiskStorage = multer.diskStorage({
   destination: (req, file, callback) => {
-      let folder = path.join(__dirname, "../public/images/personajes")
+      let folder = path.join(__dirname, "../public/image/characters")
       console.log(__dirname)
       console.log(folder)
       callback(null, folder)
@@ -24,14 +25,14 @@ const fileUpload = multer({ storage: multerDiskStorage })
 
 /* GET users listing. */
 
-router.get("/characters", personajesController.list)
-router.get("/characters/:id",personajesController.detail)
+router.get("/characters", characterController.listCharacters)
+router.get("/characters/:id",characterController.detail)
 
 
 /* PUT edicion personaje/ */
-router.put("/characters/:id", personajesController.edit)
+router.put("/characters/:id", characterController.edit)
 
 /* DELETE elimina personaje */
-router.delete("/characters/:id", personajesController.delete)
+router.delete("/characters/:id", characterController.delete)
 
 module.exports = router;
