@@ -7,10 +7,7 @@ module.exports = (sequelize, dataTypes) => {
             allowNull: false,
             type: dataTypes.INTEGER(11),
         },
-        image: {
-            type: dataTypes.STRING(50),
-            allowNull: false,
-        },
+       
         nombre: {
             type: dataTypes.STRING(50),
             allowNull: false,
@@ -25,6 +22,10 @@ module.exports = (sequelize, dataTypes) => {
         },
         historia: {
             type: dataTypes.STRING(100),
+            allowNull: false,
+        },
+        image: {
+            type: dataTypes.STRING(50),
             allowNull: false,
         },
       

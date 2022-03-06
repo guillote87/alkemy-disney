@@ -7,11 +7,11 @@ module.exports = (sequelize, dataTypes) => {
             allowNull: false,
             autoIncrement: true,
         },
-        imagen: {
+        titulo: {
             type: dataTypes.STRING(50),
             allowNull: false,
         },
-        titulo: {
+        imagen: {
             type: dataTypes.STRING(50),
             allowNull: false,
         },
@@ -19,11 +19,11 @@ module.exports = (sequelize, dataTypes) => {
             type: dataTypes.INTEGER(20),
             allowNull: false,
         },
-        rating:{
+        rating: {
             type: dataTypes.INTEGER(11),
             allowNull: false,
         },
-      
+
 
     };
     let config = {
@@ -31,12 +31,15 @@ module.exports = (sequelize, dataTypes) => {
         timestamps: false,
     }
     const Pelicula = sequelize.define(alias, cols, config);
-
-          Pelicula.associate = (models) => {
-            Pelicula.belongsToMany(models.Personaje, {
-              through: "PeliculaPersonaje" 
-          })
+    Pelicula.associate = (models) => {
+        Pelicula.belongsToMany(models.Genero, {
+            through: "PeliculaGenero"
+        })
+        Pelicula.belongsToMany(models.Personaje, {
+            through: "PeliculaPersonaje"
+        })
+    
     }
-
-    return Pelicula;
+return Pelicula;
 }
+
