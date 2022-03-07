@@ -1,10 +1,8 @@
 
 const sendEmail = (email) =>{
 
-
-process.env.SENDGRID_API_KEY
 const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey('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')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const msg = {
   to: {email}, // Change to your recipient
   from: 'g27583@hotmail.com', // Change to your verified sender
