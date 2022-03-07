@@ -2,15 +2,16 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const authConfig = require('../database/config/auth')
 const { User } = require('../database/models');
-
+const sendEmail = require('../database/config/sendGrid')
 
 module.exports = {
 
     //Login 
     login(req, res) {
-
-        let { email, password } = req.body
-
+        const { email, password } = req.body
+      
+      if (email && password){
+        
         User.findOne({
             where: {
                 email: email
@@ -34,35 +35,43 @@ module.exports = {
         }).catch(err => {
             res.status(500).json(err)
         })
+    }else{
+        res.status(400).send ("Debes ingresar usuario y contraseña")
+    }
 
     },
     register(req, res) {
+        const { name, email, password } = req.body
 
-        // Encriptamos la contraseña
-        let password = bcrypt.hashSync(req.body.password, Number.parseInt(authConfig.rounds));
+        if (name && email && password) {
 
-        // Crear un usuario
-        User.create({
-            name: req.body.name,
-            email: req.body.email,
-            password: password
-        }).then(user => {
+            // Encriptamos la contraseña
+            let passCrypt = bcrypt.hashSync(password, Number.parseInt(authConfig.rounds));
 
-            // Creamos el token
-            let token = jwt.sign({ user: user }, authConfig.secret, {
-                expiresIn: authConfig.expires
-            });
+            // Crear un usuario
+            User.create({
+                name: name,
+                email: email,
+                password: passCrypt
+            })
+                .then(user => {
 
-            res.json({
-                user: user,
-                token: token
-            });
-
-        }).catch(err => {
-            res.status(500).json(err);
-        });
+                    // Creamos el token
+                    let token = jwt.sign({ user: user }, authConfig.secret, {
+                        expiresIn: authConfig.expires
+                    });
+                    sendEmail(user.email),
+                        res.status(200).json({
+                            user: user,
+                            token: token
+                        });
+                }).catch(err => {
+                    res.status(500).json(err);
+                });
+        }
+        else {
+            return res.status(400).send("Faltan completar los campos obligatorios")
+        }
     }
-
-
 
 }

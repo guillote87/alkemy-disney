@@ -28,7 +28,11 @@ module.exports = (sequelize, dataTypes) => {
     };
     let config = {
         tableName: "movies",
-        timestamps: false,
+        timestamps: true,
+        createdAt: "created_at",
+        updatedAt: "updated_at",
+        deletedAt: "deleted_at",
+        paranoid: true
     }
     const Movie = sequelize.define(alias, cols, config);
     Movie.associate = (models) => {

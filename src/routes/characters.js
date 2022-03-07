@@ -28,7 +28,9 @@ const fileUpload = multer({ storage: multerDiskStorage })
 router.get("/characters", characterController.listCharacters)
 router.get("/characters/:id",characterController.detail)
 
+/* POST creacion personaje/ */
 
+router.post ("/characters", characterController.create)
 /* PUT edicion personaje/ */
 router.put("/characters/:id", characterController.edit)
 

@@ -39,7 +39,7 @@ const CharacterController = {
                 {
                     model: Movie,
                     attributes: ["title", "image", "created", "rating"],
-                    through: {attributes: []}
+                    through: { attributes: [] }
                 }
             ]
         })
@@ -47,24 +47,50 @@ const CharacterController = {
                 res.status(200).json(resp);
             }).catch(error => res.send(error))
     },
+    create: (req, res) => {
 
+        const { name, age, weight, history, image } = req.body
+        console.log(req.body)
+
+        if (name && age && weight && history && image) {
+            Character.create({
+                name: name,
+                age: age,
+                weight: weight,
+                history: history,
+                image: image
+            })
+                .then(user => {
+                    res.status(200).json(user)
+                }).catch(err => { res.status(500).send(err) })
+        }
+        else {
+            return res.status(400).send("Debes ingresar todos los campos obligatorios")
+        }
+
+
+
+
+    },
     edit: (req, res) => {
-        let id = req.params.id
+        const id = req.params.id
+        const {name,age,weight,history,image } = req.body
         Character.findByPk(id)
             .then(character => {
                 Character.update({
-                    name: req.body.name || character.name,
-                    age: req.body.edad || character.age,
-                    weight: req.body.peso || character.weight,
-                    historia: req.body.historia || character.history,
-                    image: req.body.image || character.image
+                    name: name || character.name,
+                    age: age || character.age,
+                    weight: weight || character.weight,
+                    history: history || character.history,
+                    image: image || character.image
                 }, {
                     where: {
                         id: id
                     }
                 })
                     .then(() => {
-                        return res.json("Elemento actualizado");
+                        res.status(200).json({msg :"Registro Actualizado", character : req.body})    
+                            
                     })
                     .catch(error => res.send(error))
             })
