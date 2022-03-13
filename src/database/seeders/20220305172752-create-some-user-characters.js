@@ -140,8 +140,5 @@ module.exports = {
       queryInterface.bulkDelete('personajes', null, {}),
       queryInterface.bulkDelete('usuarios', null, {})
     ])
-
-
-
   }
 };

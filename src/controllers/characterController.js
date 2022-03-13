@@ -67,10 +67,6 @@ const CharacterController = {
         else {
             return res.status(400).send("Debes ingresar todos los campos obligatorios")
         }
-
-
-
-
     },
     edit: (req, res) => {
         const id = req.params.id
