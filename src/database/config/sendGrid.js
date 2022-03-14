@@ -1,4 +1,4 @@
-
+require('dotenv').config()
 const sendEmail = (email) =>{
 
 const sgMail = require('@sendgrid/mail')

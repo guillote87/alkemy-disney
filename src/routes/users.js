@@ -1,13 +1,11 @@
-var express = require('express');
-const AuthController = require('../controllers/authController');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+const AuthController = require('../controllers/authController');
+
 
 router.post('/auth/login',AuthController.login)
+
 router.post('/auth/register',AuthController.register)
 
 

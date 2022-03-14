@@ -1,72 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const multer = require("multer")
-const path = require('path');
+
 
 const characterController = require('../controllers/characterController');
 const auth = require('../middlewares/auth');
 
-let multerDiskStorage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    let folder = path.join(__dirname, "../public/image/characters")
-    console.log(__dirname)
-    console.log(folder)
-    callback(null, folder)
-  },
-  filename: (req, file, callback) => {
-    console.log(file)
-    let image = Date.now() + path.extname(file.originalname)
-    console.log(image)
-    callback(null, image)
-  }
-})
-
-const fileUpload = multer({ storage: multerDiskStorage })
-
-/* GET users listing. */
-/**
- * @swagger
- * /characters:
- *    get:
- *      summary: return all characters
- *      tags: [Character]
- *      responses:
- *        200:
- *          description : all characters
- *          content:
- *            application/json:
- *              schema:
- *                type: array
- *                items :
- *                $ref: '#/components/schemas/Character'
- */
-router.get("/characters", characterController.listCharacters)
-
-/**
- * @swagger
- * /characters/{id}:
- *    get:
- *      summary: return one character
- *      tags: [Character]
- *      parameters:
- *         - in: path
- *           name: id
- *           schema:
- *             type: integer
- *           description: Character id
- *      responses:
- *        200:
- *          description: a character
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                $ref: '#/components/schemas/Character'
- 
- */
-router.get("/characters/:id", characterController.detail)
-
-/* POST creacion personaje/ */
 /**
  * @swagger
  * components:
@@ -103,6 +41,54 @@ router.get("/characters/:id", characterController.detail)
  *            image: DonaldDuck.jpg
  */
 
+
+
+/* GET users listing. */
+/**
+ * @swagger
+ * /characters:
+ *    get:
+ *      summary: return all characters
+ *      tags: [Character]
+ *      responses:
+ *        200:
+ *          description : all characters
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items :
+ *                $ref: '#/components/schemas/Character'
+ */
+router.get("/characters", auth, characterController.listCharacters)
+
+/**
+ * @swagger
+ * /characters/{id}:
+ *    get:
+ *      summary: return one character
+ *      tags: [Character]
+ *      parameters:
+ *         - in: path
+ *           name: id
+ *           schema:
+ *             type: integer
+ *           description: Character id
+ *      responses:
+ *        200:
+ *          description: a character
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                $ref: '#/components/schemas/Character'
+ 
+ */
+router.get("/characters/:id", auth, characterController.detail)
+
+/* POST creacion personaje/ */
+
+
 /**
  * @swagger
  * /characters:
@@ -122,7 +108,7 @@ router.get("/characters/:id", characterController.detail)
  *        404:
  *          description: not character found
  */
-router.post("/characters", characterController.create)
+router.post("/characters", auth, characterController.create)
 /* PUT edicion personaje/ */
 /**
  * @swagger
@@ -148,10 +134,10 @@ router.post("/characters", characterController.create)
  *          description: character updated
  
  */
-router.put("/characters/:id", characterController.edit)
+router.put("/characters/:id", auth, characterController.edit)
 
 /* DELETE elimina personaje */
-router.delete("/characters/:id", characterController.delete)
+
 /**
  * @swagger
  * /characters/{id}:
@@ -169,4 +155,6 @@ router.delete("/characters/:id", characterController.delete)
  *          description: character delete
  
  */
+router.delete("/characters/:id", auth, characterController.delete)
+
 module.exports = router;
